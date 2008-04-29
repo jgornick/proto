@@ -24,17 +24,34 @@ if (typeof Proto == 'undefined') var Proto = {};
   
   Example:
   (start code)
+  ...
+  <script type="text/javascript">
+    var Dog = Class.create(Proto.Observable, {
+      initialize: function() { }
+    });
+    
+    var dog = new Dog();
+    
+    dog.observe('bark', function(e) { alert(e.memo.name + ' barked'); });
+    dog.fire('bark', { name: 'sparky' });
+  </script>
+  ...
   (end)
 */
 Proto.Observable = {
-  /*
-    Group: Methods
-  */
+  /* Group: Methods */
 
   /*
     Function: observe
     
     Start observing the specified event with the specified handler.
+    
+    Parameters:
+      eventName - (String) The event name to observe.
+      handler - The handler function to call when the event fires.
+    
+    Returns:
+      this
   */
   observe: function(eventName, handler)
   {
@@ -64,6 +81,13 @@ Proto.Observable = {
     Function: stopObserving
     
     Stop observing the specified event with the optional handler.
+    
+    Parameters:
+      eventName - (String) The event name to observe.
+      handler - Optional - The handler function to call when the event fires.
+    
+    Returns:
+      this
   */
   stopObserving: function(eventName, handler)
   {
@@ -84,6 +108,13 @@ Proto.Observable = {
     Function: fire
     
     Fire the specified event with the optional memo object.
+    
+    Parameters:
+      eventName - (String) The event name to observe.
+      memo - (Object) Optional - An object of values to pass in the event fired.
+    
+    Returns:
+      this
   */
   fire: function(eventName, memo)
   {

@@ -35,12 +35,8 @@ Element.addMethods(['INPUT', 'TEXTAREA'], {
     element = $(element);
     
     for (var i = 0; i < Proto._masks.length; i++)
-    {
-      var mi = Proto._masks[i];
-      
-      if (mi.element == element) 
-        return mi.getValue();
-    }
+      if (Proto._masks[i].element == element) 
+        return Proto._masks[i].getValue();
   }
 });
 

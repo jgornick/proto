@@ -23,7 +23,25 @@ if (typeof Proto == 'undefined') var Proto = {};
   
   Example:
   (start code)
-  ...  
+  ...
+  <div id="test">
+    <img src="http://www.google.com/intl/en_ALL/images/logo.gif" />
+  </div>
+  <img src="http://www.google.com/intl/en_ALL/images/logo.gif" />
+  ...
+  <script type="text/javascript">
+    document.observe('images:loaded', function(e)
+    {
+      alert('document.body images ready');
+    });  
+    
+    new Proto.ImagesObserver('test', { 
+      onImagesLoaded: function() { alert('test images ready'); }
+    });
+    
+    new Proto.ImagesObserver();
+  </script> 
+  ...
   (end)
 */
 
@@ -43,9 +61,9 @@ Proto.ImagesObserver = Class.create({
     Constructor. Should not be called directly.
     
     Parameters:
-      el - Optional - (String|HTMLElement) Element to observe the images loaded state.
+      el - (String|HTMLElement) Optional - Element to observe the images loaded state.
       If el isn't specified, then default to document.body.
-      options - Optional - (Object) Options used to setup the Proto.ImagesObserver.
+      options - (Object) Optional - Options used to setup the Proto.ImagesObserver.
     
     Returns:
       Proto.ImagesObserver

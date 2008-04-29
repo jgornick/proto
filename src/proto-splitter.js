@@ -1,29 +1,102 @@
-/**
- * @author Joe Gornick
- * @version 0.1
- * 
- * @requires Prototype JavaScript Framework 1.6.0.2 - http://prototypejs.org/download
- * @requires Proto.ElementMethods - proto-methods.js
- * 
- * @license MIT
- */
+/*
+  Title: Proto.Splitter
+  
+  About: Author
+  Joe Gornick
+  
+  About: Version
+  0.1
+  
+  About: License
+  This file is licensed under the MIT license.
+  
+  About: Required Libraries
+  Prototype JavaScript Framework 1.6.0.2 <http://prototypejs.org/download>  
+  
+  Proto.ElementMethods <Proto.ElementMethods>
+*/
 
 if (typeof Proto == 'undefined') var Proto = {};
 
 Element.addMethods(Proto.ElementMethods);
 
+/*
+  Class: Proto.Splitter
+  
+  Creates a vertical splitter control between two divs.
+  
+  Example:
+  (start code)
+  ...
+  <div id="container">
+    <div id="left_side">Left</div>
+    <div id="right_side">Right</div>
+  </div>
+  ...
+  <script type="text/javascript">
+    new Proto.Splitter('left_side', 'right_side');
+  </script>
+  ...
+  (end)
+  
+  Assumptions:
+    - The elements to be split must be on the same level.
+    
+  Notes:
+    - After the splitter has moved, each element (el1 and el2) will fire a 'div:resized'
+    event on the element itself.  In our example above, if you wanted to know when the
+    left side was resized, you would $('left_side').observe('div:resized', ...);.
+    When the div is resized, the new dimensions are also available in the events
+    memo field.
+*/
+
+/*
+  Group: Options
+  
+    Property: splitterStyle
+    (Object) An object containing style information for the splitter.  Uses the 
+    Element.setStyle object format.
+    
+    Property: proxySplitterStyle
+    (Object) An object containing style information for the proxy splitter.  Uses 
+    the Element.setStyle object format.
+    
+    Property: minEl1Width
+    (Integer) Specifies the minimum width of el1 (left side).  Defaults to 100.
+    
+    Property: minEl2Width
+    (Integer) Specifies the minimum width of el2 (right side). Defaults to 100.
+*/
+
+/* 
+  Group: Properties
+  
+    Property: options
+    (Object) The options passed in the constructor.
+*/
 Proto.Splitter = Class.create({
+  /*
+    Group: Constructor
+    
+    Constructor: initialize
+    
+    Constructor. Should not be called directly.
+    
+    Parameters:
+      el1 - (String|HTMLElement) The "left" element
+      el2 - (String|HTMLElement) The "right" element      
+      options - (Object) Options used to setup the splitter.
+    
+    Returns:
+      Proto.Splitter
+  */  
   initialize: function(el1, el2, options)
   {
     this.options = {
       splitterStyle: {},
       proxySplitterStyle: {},
       minEl1Width: 100,
-      minEl2Width: 100,
-      onMouseDown: Prototype.emptyFunction,
-      onMouseMove: Prototype.emptyFunction,
-      onMouseUp: Prototype.emptyFunction,
-      onUpdateDimensions: Prototype.emptyFunction
+      minEl2Width: 100
     };
     Object.extend(this.options, options || { });
     

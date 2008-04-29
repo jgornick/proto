@@ -24,6 +24,21 @@ if (typeof Proto == 'undefined') { var Proto = { } };
   Example:
   (start code)
   ...
+  <div id="progress_bar"></div>
+  ...
+  <script type="text/javascript">
+    var pb = new Proto.ProgressBar('progress_bar', {
+      width: 154,
+      height: 11,
+      boxImage: 'custom1_box.gif',
+      barImage: 'custom1_bar.gif',
+      percent: 10
+    });
+    
+    pb.setPercent(50); // Set percent to 50%
+    pb.setPercent('+10'); // Set percent to 60%
+    pb.setPercent('-50'); // Set percent to 10%
+  </script>
   (end)
 */
 
@@ -31,35 +46,38 @@ if (typeof Proto == 'undefined') { var Proto = { } };
   Group: Options
   
     Property: boxImage
-    The path of the progress box image.  Defaults to: progressbar-box.png.
+    (String) The path of the progress box image.  Defaults to: progressbar-box.png.
     
     Property: barImage
-    The path of the progress bar. Default to: progressbar-bar.png.
+    (String) The path of the progress bar. Default to: progressbar-bar.png.
     
     Property: width
-    The width of the progress bar.  The images must match up to be the same size.  Defaults to: 120.
+    (Integer) The width of the progress bar.  The images must match up to be the 
+    same size.  Defaults to: 120.
     
     Property: height
-    The height of the progress bar.  The images must match up to be the same size.  Defaults to: 10.
+    (Integer) The height of the progress bar.  The images must match up to be the 
+    same size.  Defaults to: 10.
     
     Property: percent
-    The initial percent to set the progress bar to.  Defaults to: 0.
+    (Integer) The initial percent to set the progress bar to.  Defaults to: 0.
     
     Property: showText
-    Determines whether to show the percentage text to the right of the progress bar.  Defaults to: false.
+    (Boolean) Determines whether to show the percentage text to the right of the 
+    progress bar.  Defaults to: false.
 */
 
 /* 
   Group: Properties
   
     Property: container
-    The element to convert to a progress bar.
+    (HTMLElement) The element to convert to a progress bar.
 
     Property: options
-    The options passed in the constructor.
+    (Object) The options passed in the constructor.
     
     Property: percent
-    The current percentage of the progress bar.
+    (Integer) The current percentage of the progress bar.
 */
 Proto.ProgressBar = Class.create({
   /*
@@ -94,38 +112,7 @@ Proto.ProgressBar = Class.create({
     this._build();
   },
 
-
-  _build: function()
-  {
-    var initialPos = this.options.width * (-1);
-
-    this.progressBarImage = new Element('img', { 
-      id: this.container.id + '_progressbar_image', 
-      src: this.options.boxImage, 
-      alt: this.percent + '%',
-      title: this.percent + '%' 
-    })
-      .setStyle({
-        width: this.options.width + 'px',
-        height: this.options.height + 'px',
-        backgroundPosition: initialPos + 'px 50%',
-        backgroundImage: 'url(' + this.options.barImage + ')',
-        margin: 0,
-        padding: 0
-      });
-
-    this.progressBarText = new Element('span', { id: this.id + '_progressbar_text' }).update('0%');
-
-    // Insert the elements into the DOM
-    this.container.insert(this.progressBarImage);
-    if (this.options.showText) this.container.insert(this.progressBarText);
-
-    this.setPercent(this.percent);
-  },
-
-  /*
-    Group: Methods
-  */
+  /* Group: Methods */
   
   /*
     Function: setPercent
@@ -133,8 +120,9 @@ Proto.ProgressBar = Class.create({
     Sets the percentage of the progress bar.
     
     Parameters:
-      percent - (String|Number) The specified percentage value.  Values can be a range of 0 - 100 or
-      can specify a string like +10 to add 10 percent to the current percentage.
+      percent - (String|Integer) The specified percentage value.  Values can be a 
+      range from 0 to 100 or can specify a string like +10 to add 10 percent to the 
+      current percentage.
   */
   setPercent: function(percent)
   {
@@ -165,5 +153,33 @@ Proto.ProgressBar = Class.create({
       this.progressBarText.update(this.newPercent + '%');
     
     this.percent = this.newPercent;
-  }
+  },
+  
+  _build: function()
+  {
+    var initialPos = this.options.width * (-1);
+
+    this.progressBarImage = new Element('img', { 
+      id: this.container.id + '_progressbar_image', 
+      src: this.options.boxImage, 
+      alt: this.percent + '%',
+      title: this.percent + '%' 
+    })
+      .setStyle({
+        width: this.options.width + 'px',
+        height: this.options.height + 'px',
+        backgroundPosition: initialPos + 'px 50%',
+        backgroundImage: 'url(' + this.options.barImage + ')',
+        margin: 0,
+        padding: 0
+      });
+
+    this.progressBarText = new Element('span', { id: this.id + '_progressbar_text' }).update('0%');
+
+    // Insert the elements into the DOM
+    this.container.insert(this.progressBarImage);
+    if (this.options.showText) this.container.insert(this.progressBarText);
+
+    this.setPercent(this.percent);
+  }  
 });

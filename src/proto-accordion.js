@@ -48,19 +48,63 @@ if (typeof Proto == 'undefined') var Proto = {};
 */
 
 /*
+  Group: CSS
+    Sample CSS:
+    (start code)
+    .toggle {
+      font-size: 1em;
+      
+      height: 2em;
+      line-height: 2em;
+      
+    	display: block;
+      margin: 0;
+    	padding: 0 25px;  
+      
+    	background: #DDD;
+      color: #000;
+    	border-bottom: 1px solid #ACA899;
+      
+      font-weight: normal;
+    	text-decoration: none;
+    	
+      outline: none;
+     
+    	cursor: pointer;
+    }
+
+    .toggle.active {
+    	background-color: #FFC848;
+    	color: #000;
+    	border-bottom: 1px solid #FBAF00;
+    }
+    
+    .content {
+    	background-color: #FFF;
+    	color: #000;
+    	overflow: hidden;
+    }
+
+    .content div.contentBody {
+      padding: 20px;
+    }
+    (end)
+*/
+
+/*
   Group: Options
   
     Property: sectionIndex
-    Used to specify the section to show after loaded.
+    (Integer) Used to specify the section to show after loaded.
     
     Property: useEffects
-    Use script.aculo.us slide effects when toggling sections.  Requires script.aculo.us effects library.
+    (Boolean) Use script.aculo.us slide effects when toggling sections.  Requires script.aculo.us effects library.
     
     Property: effectOptions
-    Script.aculo.us slide effect options.
+    (Object) Script.aculo.us slide effect options.
     
     Property: singleActive
-    Only show no more than one section at any given time.
+    (Boolean) Only show no more than one section at any given time.
     
     Property: onShowSection
     An event which fires after the section is showing.
@@ -73,13 +117,13 @@ if (typeof Proto == 'undefined') var Proto = {};
   Group: Properties
   
     Property: sections
-    An array of available accordion sections.
+    (Array) An array of available accordion sections.
     
     Property: options
-    The options passed in the constructor.
+    (Object) The options passed in the constructor.
     
     Property: el
-    The accordion element.
+    (HTMLElement) The accordion element.
 */
 
 Proto.Accordion = Class.create({
@@ -91,8 +135,8 @@ Proto.Accordion = Class.create({
     Constructor. Should not be called directly.
     
     Parameters:
-      el - A string or the element that will be converted to an accordion.
-      options - The options object to use when setting up the accordion.
+      el - (String|HTMLElement) A string or the element that will be converted to an accordion.
+      options - (Object) The options object to use when setting up the accordion.
     
     Returns:
       Proto.Accordion
@@ -135,9 +179,7 @@ Proto.Accordion = Class.create({
       this.toggleSection(this.options.sectionIndex); 
   },
 
-  /*
-    Group: Methods
-  */
+  /* Group: Methods */
   
   /*
     Function: toggleSection
@@ -145,8 +187,8 @@ Proto.Accordion = Class.create({
     Toggles the section.
     
     Parameters:
-      section - The section object to toggle.
-      options - The options object to use when toggling the section.
+      section - (Object) The section object to toggle.
+      options - (Object) The options object to use when toggling the section.
     
     See Also:
       <showSection>
@@ -172,8 +214,8 @@ Proto.Accordion = Class.create({
     Shows the section.
     
     Parameters:
-      section - The section object to show.
-      options - The options object to use when showing the section.
+      section - (Object) The section object to show.
+      options - (Object) The options object to use when showing the section.
   */
   showSection: function(section, options)
   {
@@ -220,25 +262,14 @@ Proto.Accordion = Class.create({
     }
   },
   
-  _onShowSection: function(section, options)
-  {
-    if (typeof options == 'undefined') options = this.options;
-    
-    section.active = true;
-    
-    // If the onShowSection event handler is available, fire it.
-    if (typeof options.onShowSection != 'undefined')
-      options.onShowSection(this, section);    
-  },
-  
   /*
     Function: hideSection
     
     Hides the section.
     
     Parameters:
-      section - The section object to hide.
-      options - The options object to use when hiding the section.
+      section - (Object) The section object to hide.
+      options - (Object) The options object to use when hiding the section.
   */
   hideSection: function(section, options)
   {
@@ -282,25 +313,14 @@ Proto.Accordion = Class.create({
       this._onHideSection(this, section, options);
     } 
   },
-
-  _onHideSection: function(section, options)
-  {
-    if (typeof options == 'undefined') options = this.options;
-    
-    section.active = false;
-    
-    // If the onHideSection event handler is available, fire it.
-    if (typeof options.onHideSection != 'undefined')
-      options.onHideSection(this, section);    
-  },
-
+  
   /*
     Function: showAllSections
     
     Shows all sections.
     
     Parameters:
-      options - The options object to use when showing the sections.
+      options - (Object) The options object to use when showing the sections.
   */
   showAllSections: function(options)
   {
@@ -314,11 +334,33 @@ Proto.Accordion = Class.create({
     Hides all sections.
     
     Parameters:
-      options - The options object to use when hiding the sections.
+      options - (Object) The options object to use when hiding the sections.
   */  
   hideAllSections: function(options)
   {
     if (typeof options == 'undefined') options = this.options;
     this.sections.each(function(s) { this.hideSection(s, options); }.bind(this));
+  },
+  
+  _onShowSection: function(section, options)
+  {
+    if (typeof options == 'undefined') options = this.options;
+    
+    section.active = true;
+    
+    // If the onShowSection event handler is available, fire it.
+    if (typeof options.onShowSection != 'undefined')
+      options.onShowSection(this, section);    
+  },
+
+  _onHideSection: function(section, options)
+  {
+    if (typeof options == 'undefined') options = this.options;
+    
+    section.active = false;
+    
+    // If the onHideSection event handler is available, fire it.
+    if (typeof options.onHideSection != 'undefined')
+      options.onHideSection(this, section);    
   }
 });

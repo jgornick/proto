@@ -394,6 +394,25 @@ Proto.ElementMethods = {
       border: b,
       padding: p
     }
+  },
+  
+  /*
+    Function: addHoverClassName
+    
+    Observes the mouseover, mouseout event and adds/removes specified class name.  
+    
+    Parameters: 
+      element - The element to observe the events on.
+      className - The hover class name to use.
+    
+    Returns:
+      (HTMLElement) element
+  */
+  addHoverClassName: function(element, className)
+  {
+    return $(element)
+      .observe('mouseover', Element.addClassName.curry(element, className))
+      .observe('mouseout', Element.removeClassName.curry(element, className));
   }
 };
 

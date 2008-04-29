@@ -55,6 +55,10 @@ Group: Proto  {
    File: Methods  (proto-methods.js)
    File: Observable  (proto-observable.js)
    File: ProgressBar  (proto-progressbar.js)
+   File: Splitter  (proto-splitter.js)
+   File: TabControl  (proto-tabcontrol.js)
+   File: TextResizeDetection  (proto-textresizedetection.js)
+   File: Toolbar  (proto-toolbar.js)
    File: Tree  (proto-tree.js)
    }  # Group: Proto
 

@@ -29,6 +29,19 @@ Element.addMethods(Proto.ElementMethods);
   Example:
   (start code)
   ...
+  <div id="container"></div>
+  ...
+  <script type="text/javascript">
+    new Proto.AreaSelector('container', {
+      style: {
+        backgroundColor: '#08B',
+        border: '1px solid #CCC', 
+        opacity: '.75'
+      },
+      onMouseUp: function(coords) { ... });      
+    }); 
+  </script>
+  ...
   (end)
 */
 
@@ -36,7 +49,7 @@ Element.addMethods(Proto.ElementMethods);
   Group: Options
   
     Property: style
-    The style object to use for setting inline styles.  The selector also can be 
+    (Object) The style object to use for setting inline styles.  The selector also can be 
     styled by using the "selector" class name.
     
     Property: onMouseDown((Object) coords)
@@ -53,10 +66,10 @@ Element.addMethods(Proto.ElementMethods);
   Group: Properties
   
     Property: el
-    The element where the selector will attach itself to.
+    (HTMLElement) The element where the selector will attach itself to.
     
     Property: options
-    The options passed in the constructor.
+    (Object) The options passed in the constructor.
 */
 Proto.AreaSelector = Class.create({
   /*
@@ -67,8 +80,8 @@ Proto.AreaSelector = Class.create({
     Constructor. Should not be called directly.
     
     Parameters:
-      el - A string or the element that the selector will attach to.
-      options - The options object to use when setting up the selector.
+      el - (String|HTMLElement) A string or the element that the selector will attach to.
+      options - (Object) The options object to use when setting up the selector.
     
     Returns:
       Proto.AreaSelector
@@ -103,9 +116,7 @@ Proto.AreaSelector = Class.create({
     this.el.insert({top: this.selectorDiv});
   },
   
-  /*
-    Group: Methods
-  */
+  /* Group: Methods */
   
   /*
     Function: getCoords
@@ -130,7 +141,7 @@ Proto.AreaSelector = Class.create({
     Enables the selector.
     
     Returns:
-      this
+      <Proto.AreaSelector>
   */
   enable: function()
   {
@@ -146,7 +157,7 @@ Proto.AreaSelector = Class.create({
     Disables the selector.
     
     Returns:
-      this
+      <Proto.AreaSelector>
   */
   disable: function()
   {
