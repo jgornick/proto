@@ -53,11 +53,24 @@ Proto.ElementMethods = {
   {
     element = $(element);
     
+    // Show the element if it's hidden.  There is a bug with some browser where
+    // it can not get computed border and padding values if it's not visible.
+    var hidden = false;
+    
+    if (!element.visible()) 
+    {
+      hidden = true;
+      element.show();
+    }
+
     var top = parseInt(element.getStyle('border-top-width').sub('px', ''));
     var left = parseInt(element.getStyle('border-left-width').sub('px', ''));
     var bottom = parseInt(element.getStyle('border-bottom-width').sub('px', ''));
     var right = parseInt(element.getStyle('border-right-width').sub('px', ''));
-
+    
+    // Hide the element if it was previously hidden.
+    if (hidden) element.hide();
+    
     return {
       top: top ? top : 0,
       left: left ? left : 0,
@@ -89,11 +102,24 @@ Proto.ElementMethods = {
   getPadding: function(element)
   {
     element = $(element);
+    
+    // Show the element if it's hidden.  There is a bug with some browser where
+    // it can not get computed border and padding values if it's not visible.
+    var hidden = false;
+    
+    if (!element.visible()) 
+    {
+      hidden = true;
+      element.show();
+    }
 
     var top = parseInt(element.getStyle('padding-top').sub('px', ''));
     var left = parseInt(element.getStyle('padding-left').sub('px', ''));
     var bottom = parseInt(element.getStyle('padding-bottom').sub('px', ''));
     var right = parseInt(element.getStyle('padding-right').sub('px', ''));
+
+    // Hide the element if it was previously hidden.
+    if (hidden) element.hide();
     
     return {
       top: top ? top : 0,

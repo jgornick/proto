@@ -507,7 +507,7 @@ Proto.TabPage = Class.create({
       }); 
     
     // By default, deselect this tab.
-    this.deselect();            
+    this.deselect();           
   },
   
   _onTabClick: function(e)
