@@ -157,22 +157,20 @@ Proto.Accordion = Class.create({
     
     this.sections = $A();
     
+    this._animating = false;
+    
     // Gather our toggles
-    this.el.childElements().grep(new Selector('.toggle')).each(function(toggle)
+    this.el.childElements().grep(new Selector('.toggle')).each(function(toggle, i)
     {
-      this.sections.push({
+      this._addSection({
         toggle: toggle,
         content: toggle.next(),
-        active: false
+        active: false,
+        index: i     
       });
     }.bind(this));
-
-    // Setup the sections here.  Observe the click on the toggle and hide all sections.
-    this.sections.each(function(section)
-    {
-      section.toggle.observe('click', this.toggleSection.bind(this, section, undefined));
-      this.hideSection(section, { useEffects: false }); // Hide all sections by default
-    }.bind(this));
+    
+    this.hideAllSections({ useEffects: false }); // Hide all sections by default
     
     // If the sectionIndex is specified, then toggle that section.
     if (this.options.sectionIndex != null) 
@@ -195,11 +193,18 @@ Proto.Accordion = Class.create({
       
       <hideSection>
   */
-  toggleSection: function(section, options)
+  toggleSection: function(section, options, e)
   {
+    // Stop any event passed in.
+    if (typeof e != 'undefined') e.stop();
+    
     if (typeof options == 'undefined') options = this.options;
+    
     // If section is a number, this means we want to show by index.
     if (typeof section == 'number') section = this.sections[section];
+    
+    // If we are animating, then do not toggle another section.
+    if (this._animating) return;
     
     // Hide the section if the content is visible, else, show the section.
     if (section.content.visible())
@@ -252,7 +257,7 @@ Proto.Accordion = Class.create({
           this._onShowSection(section, options);
         }.bind(this);
       }
-      
+      this._animating = true;
       section.content.blindDown(effectOptions);
     }
     else
@@ -304,7 +309,7 @@ Proto.Accordion = Class.create({
           this._onHideSection(section, options);
         }.bind(this);
       }
-      
+      this._animating = true;
       section.content.blindUp(effectOptions);
     }
     else
@@ -342,10 +347,19 @@ Proto.Accordion = Class.create({
     this.sections.each(function(s) { this.hideSection(s, options); }.bind(this));
   },
   
+  _addSection: function(section)
+  {
+    section.toggle.observe('click', this.toggleSection.bind(this, section, undefined));
+    this.sections.push(section);
+    
+    return section;    
+  },
+  
   _onShowSection: function(section, options)
   {
     if (typeof options == 'undefined') options = this.options;
-    
+
+    this._animating = false;
     section.active = true;
     
     // If the onShowSection event handler is available, fire it.
@@ -357,6 +371,7 @@ Proto.Accordion = Class.create({
   {
     if (typeof options == 'undefined') options = this.options;
     
+    this._animating = false;    
     section.active = false;
     
     // If the onHideSection event handler is available, fire it.
