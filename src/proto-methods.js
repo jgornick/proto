@@ -52,15 +52,26 @@ Proto.ElementMethods = {
   getBorderWidth: function(element)
   {
     element = $(element);
-    
+
     // Show the element if it's hidden.  There is a bug with some browser where
     // it can not get computed border and padding values if it's not visible.
     var hidden = false;
     
+    var originalStyle = {
+      visibility: element.getStyle('visibility'),
+      position: element.getStyle('position'),
+      display: element.getStyle('display')
+    };
+
     if (!element.visible()) 
     {
       hidden = true;
-      element.show();
+      
+      element.setStyle({
+        visibility: 'hidden',
+        position: 'absolute',
+        display: 'block'
+      });
     }
 
     var top = parseInt(element.getStyle('border-top-width').sub('px', ''));
@@ -69,7 +80,7 @@ Proto.ElementMethods = {
     var right = parseInt(element.getStyle('border-right-width').sub('px', ''));
     
     // Hide the element if it was previously hidden.
-    if (hidden) element.hide();
+    if (hidden) element.setStyle(originalStyle);
     
     return {
       top: top ? top : 0,
@@ -102,15 +113,26 @@ Proto.ElementMethods = {
   getPadding: function(element)
   {
     element = $(element);
-    
+
     // Show the element if it's hidden.  There is a bug with some browser where
     // it can not get computed border and padding values if it's not visible.
     var hidden = false;
     
+    var originalStyle = {
+      visibility: element.getStyle('visibility'),
+      position: element.getStyle('position'),
+      display: element.getStyle('display')
+    };
+
     if (!element.visible()) 
     {
       hidden = true;
-      element.show();
+      
+      element.setStyle({
+        visibility: 'hidden',
+        position: 'absolute',
+        display: 'block'
+      });
     }
 
     var top = parseInt(element.getStyle('padding-top').sub('px', ''));
@@ -119,7 +141,7 @@ Proto.ElementMethods = {
     var right = parseInt(element.getStyle('padding-right').sub('px', ''));
 
     // Hide the element if it was previously hidden.
-    if (hidden) element.hide();
+    if (hidden) element.setStyle(originalStyle);
     
     return {
       top: top ? top : 0,
@@ -394,10 +416,10 @@ Proto.ElementMethods = {
   getAllDimensions: function(element)
   {
     element = $(element);
-    
+
     var d = element.getDimensions();
     var o = element.cumulativeOffset();
-    var po = element.positionedOffset();   
+    var po = element.positionedOffset();
     var b = element.getBorderWidth();
     var p = element.getPadding();
     
