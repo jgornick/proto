@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" debug="true">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Proto.Observable Mix-in</title>
+    <link rel="stylesheet" type="text/css" href="firebug.css">
+    <script type="text/javascript" src="prototype-pack.js"></script>
+    <script type="text/javascript" src="proto-observable.js"></script>
+    
+    <style type="text/css">
+      #observe_status {
+        width: 500px;
+        height: 400px;
+        overflow: auto;
+      }
+    </style>
+	</head>
+	<body>
+	  <button id="observable_class_start">Observable Class Start</button>
+    <button id="stop_observing_all">Stop Observing All</button>
+    <button id="start_observing_all">Start Observing All</button>
+
+    <button id="stop_observing_observer_1">Stop Observing Observer 1</button>
+    <button id="start_observing_observer_1">Start Observing Observer 1</button>
+
+    <button id="stop_observing_observer_2">Stop Observing Observer 2</button>
+    <button id="start_observing_observer_2">Start Observing Observer 2</button>
+    
+    <div id="observe_status"></div>
+	  <script type="text/javascript">
+      var ObservableClass = Class.create(Proto.Observable, {
+        initialize: function() { },
+        start: function()
+        {
+          writeStatus('start');
+          this.fire('class:started', { sender: this });
+          return this;
+        }
+      });
+      
+      var observableClass;
+      document.observe('dom:loaded', function() 
+      {
+        observableClass = new ObservableClass();
+        startObservingAll();        
+        
+        $('observable_class_start').observe('click', observableClass.start.bind(observableClass));
+        $('stop_observing_all').observe('click', stopObservingAll);
+        $('start_observing_all').observe('click', startObservingAll);
+        $('stop_observing_observer_1').observe('click', stopObservingObserver1);
+        $('start_observing_observer_1').observe('click', startObservingObserver1);
+        $('stop_observing_observer_2').observe('click', stopObservingObserver2);
+        $('start_observing_observer_2').observe('click', startObservingObserver2);
+      });
+      
+      function observer2(e)
+      {
+        writeStatus('Observer 2');
+      }
+      
+      function writeStatus(message)
+      {
+        $('observe_status').insert('<span>' + message + '</span><br />');
+        $('observe_status').scrollTop = $('observe_status').scrollHeight;
+      }
+      
+      function stopObservingAll()
+      {
+        observableClass.stopObserving('class:started');
+      }
+
+      function startObservingAll()
+      {
+        console.log(observableClass);
+        var func1 = function() { writeStatus('Observer 1'); };
+        var func3 = function() { writeStatus('Observer 3'); };
+        
+        observableClass
+          .observe('class:started', func1)
+        	.observe('class:started', observer2)
+          .observe('class:started', func3);
+      }
+      
+      function stopObservingObserver1()
+      {
+        var func1 = function() { writeStatus('Observer 1'); };
+        observableClass.stopObserving('class:started', func1);
+      }
+
+      function startObservingObserver1()
+      {
+        var func1 = function() { writeStatus('Observer 1'); };
+        observableClass.observe('class:started', func1);
+      }   
+      
+      function stopObservingObserver2()
+      {
+        console.log(observableClass);
+        observableClass.stopObserving('class:started', observer2);
+      }
+      
+      function startObservingObserver2()
+      {
+        observableClass.observe('class:started', observer2);
+      }      
+	  </script>
+	</body>
+</html>

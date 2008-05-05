@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" debug="true">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Proto.MaskedInput</title>
+    <link rel="stylesheet" type="text/css" href="firebug.css">
+    <script type="text/javascript" src="prototype-pack.js"></script>
+    <script type="text/javascript" src="proto-maskedinput.js"></script>
+    <script type="text/javascript" src="firebug.js"></script>
+	</head>
+	<body>
+    <form id='pcform' action='index.php' method='post'>
+      <table id='tests'>
+        <thead>
+          <tr>
+            <th>Mask</th>
+            <th>Field</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan='2' style='text-align:center'>
+              <input type='submit' value='Submit'>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </form>
+    
+	  <script type="text/javascript">
+      var testRow = new Template("<tr><td><label>#{mask}</label></td><td><input type='text' id='field#{num}' name='field#{num}' value=''></td></tr>");
+
+      var testMasks = [
+         '(999) 000-0000',
+         '00/00/0000',
+         '$90.00',
+         '$90.99',
+         '000-000-0000',
+         '099.099.099.099'
+      ];
+      
+      document.observe('dom:loaded', function() 
+      {
+        var testTable = $('tests');
+        testMasks.each(function(mask, i) 
+        {
+          $(testTable.tBodies[0]).insert(testRow.evaluate({mask: mask, num: i}));
+          $('field' + i).mask(mask, {
+            onValidating: function(isValid, value, mask)
+            {
+              if (!isValid) mask.element.setStyle({border: '2px solid #F00'});
+              else mask.element.setStyle({border: '2px solid #0F0'});
+            }
+          });
+        });
+        
+        $('pcform').observe('submit', function(ev) 
+        {
+          ev.stop();
+
+          var maskValues = testMasks.map(function(mask, i) 
+          {
+            return 'field' + i + ' = ' + $('field' + i).getMaskValue();
+          });
+          
+          alert(maskValues.join('\n'));
+        });
+      });
+	  </script>
+	</body>
+</html>

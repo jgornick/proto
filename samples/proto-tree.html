@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Proto.Tree</title>
+    
+    <script type="text/javascript" src="prototype-pack.js"></script>
+    <script type="text/javascript" src="proto-tree.js"></script>
+    
+    <style type="text/css">
+      ul.tree, ul.tree ul {
+        list-style-type: none;
+        background: url(../img/vline.png) repeat-y;
+        margin: 0;
+        padding: 0;
+        display: block;
+      }
+      
+      ul.tree li.closed ul {
+        display: none;
+      }
+      
+      ul.tree ul {
+        margin-left: -10px;
+      }
+      
+      ul.tree li span.hover {
+        text-decoration: underline;
+      }      
+
+      ul.tree li.children,
+      ul.tree li.children.last {
+        background: #fff url(folder_image.png) no-repeat;
+      }
+      
+      ul.tree li,
+      ul.tree li.last {
+        margin: 0;
+        padding: 0 20px;
+        line-height: 1.2em;
+        background: #fff url(image.png) no-repeat;
+      }
+    </style>
+	</head>
+	<body>
+    <ul class="tree" id="test_tree">
+    </ul>
+    
+    <script type="text/javascript">
+      document.observe('dom:loaded', function()
+      {
+        var ul = $('test_tree');
+        var tree = new Proto.Tree(ul, {});
+                
+        var item1 = new Proto.Tree.Node({
+          text: 'Item 1'
+        });
+        tree.add(item1);
+
+        var item2 = new Proto.Tree.Node({
+          text: 'Item 2'
+        });
+        var item4 = new Proto.Tree.Node({
+          text: 'Item 4'
+        });        
+        item1.add(item2);
+        item1.add(item4);
+
+        item4.add(new Proto.Tree.Node({
+          text: 'Item 5'
+        }));
+
+        var item3 = new Proto.Tree.Node({
+          text: 'Item 3',
+          onClick: function(node) { alert(node.options.text); }
+        });
+        item2.add(item3);
+        
+        tree.close(true);
+      });
+    </script>
+	</body>
+</html>

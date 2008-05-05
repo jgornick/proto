@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<meta http-equiv="imagetoolbar" content="no">
+
+    <title>Proto.Accordion</title>
+
+    <script src="prototype-pack.js" type="text/javascript" charset="utf-8"></script>
+    <script src="effects.js" type="text/javascript" charset="utf-8"></script>
+    <script src="proto-accordion.js" type="text/javascript" charset="utf-8"></script>
+
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      
+      html, body {
+        width: 100%;
+        height: 100%;
+      }
+      
+      #container {
+        position: absolute;
+        width: 500px;
+
+        height: 400px;
+        border: 10px solid #000;
+        left: 50%;
+        margin-left: -250px;
+
+       
+        overflow: auto;
+        cursor: default;
+      }
+      
+      #accordion .toggle {
+        font-size: 1em;
+        
+        height: 2em;
+        line-height: 2em;
+        
+      	display: block;
+        margin: 0;
+      	padding: 0 25px;  
+        
+      	background: #DDD;
+        color: #000;
+      	border-bottom: 1px solid #ACA899;
+        
+        font-weight: normal;
+      	text-decoration: none;
+      	
+        outline: none;
+       
+      	cursor: pointer;
+      }
+
+      #accordion .toggle.active {
+      	background-color: #FFC848;
+      	color: #000;
+      	border-bottom: 1px solid #FBAF00;
+      }
+      
+      #accordion .content {
+      	background-color: #FFF;
+      	color: #000;
+      	overflow: hidden;
+      }
+
+      #accordion .content div.contentBody {
+        padding: 20px;
+      }
+      
+      #form_content form {
+        padding: 20px;
+      }
+      
+      #accordion_2 {
+        padding: 20px;
+      }
+      
+      #accordion_3 {
+        list-style: none;
+      }
+    </style>
+	</head>
+	<body>
+	  <div id="container">
+  	  <div id="accordion">
+        <h1 class="toggle">Accordion #1</h1>
+        <div class="content">
+          <div class="contentBody">
+            Add some content here that you want to padding on the content div.
+            If you add padding to the content div, when using effects, they will 
+            seem a little jittery because it does not take in account of the padding size.
+          </div>
+        </div>
+        <h1 class="toggle">Accordion #2</h1>
+        <div id="form_content" class="content">
+          <form>
+            <input type="text" />
+            <br />
+            <input type="text" />
+            <br />
+            <input type="text" />
+            <br />
+            <input type="text" />
+            <br />
+            <input type="text" />
+            <br />
+            <input type="text" />
+            <br />
+          </form>
+        </div>
+        <h1 class="toggle">Accordion #3</h1>
+        <div class="content">
+      	  <div id="accordion_2">
+            <h1 class="toggle">Accordion #3_1</h1>
+            <div class="content">
+              <div class="contentBody">
+                Add some content here that you want to padding on the content div.
+                If you add padding to the content div, when using effects, they will 
+                seem a little jittery because it does not take in account of the padding size.
+              </div>
+            </div>
+            <h1 class="toggle">Accordion #3_2</h1>
+            <div id="form_content" class="content">
+              <form>
+                <input type="text" />
+                <br />
+                <input type="text" />
+                <br />
+                <input type="text" />
+                <br />
+                <input type="text" />
+                <br />
+                <input type="text" />
+                <br />
+                <input type="text" />
+                <br />
+              </form>
+            </div>
+            <h1 class="toggle">Accordion #3_3</h1>
+            <div class="content">Accordion #3_3 Content</div>
+      	  </div>
+        </div>
+  	  </div>
+    </div>
+	  
+    <script type="text/javascript">
+      var accordion = new Proto.Accordion('accordion', {
+        useEffects: true, // Use script.aculo.us effects
+        sectionIndex: 0, // Show the first section
+        singleActive: true // Can only have one section active at a time.
+      });
+      var accordion2 = new Proto.Accordion('accordion_2', {
+        useEffects: false  // Do not use script.aculo.us effects
+      });
+      
+      // Show the second section
+      accordion2.showSection(1);
+
+      var accordion3 = new Proto.Accordion('accordion_3');
+
+    </script>
+	</body>
+</html>

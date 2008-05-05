@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<meta http-equiv="imagetoolbar" content="no">
+    <title>Proto.AreaSelector</title>
+    <script src="prototype-pack.js" type="text/javascript" charset="utf-8"></script>
+    <script src="proto-methods.js" type="text/javascript" charset="utf-8"></script>
+    <script src="proto-areaselector.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      
+      html, body {
+        width: 100%;
+        height: 100%;
+      }
+      
+      #container {
+        position: absolute;
+        width: 500px;
+        height: 400px;
+        border: 10px solid #000;
+        left: 50%;
+        margin-left: -250px;
+        overflow: hidden;
+        cursor: default;
+      }
+    </style>
+	</head>
+	<body>
+	  <div id="container">
+	    <div id="coords">Click and drag within this container.</div>
+	  </div>
+	  
+    <script type="text/javascript">
+      new Proto.AreaSelector($('container'), {
+        style: {
+          backgroundColor: '#08B',
+          border: '1px solid #CCC',
+          opacity: '.75'
+        },
+        onMouseUp: function(coords) { $('coords').update($H(coords).inspect().escapeHTML()); }
+      }).enable();
+    </script>
+	</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		
+    <title>Proto.TextResizeDetection</title>
+    
+    <script type="text/javascript" src="prototype-pack.js"></script>
+    <script type="text/javascript" src="proto-textresizedetection.js"></script>
+	</head>
+	<body>
+	  Try to change the text size on this page.  You should see a div below update with the current and previous sizes.
+    <br /><br />
+    
+    How to change font size:
+    <ul>
+      <li>In Firefox and Safari, you can use <code>CTRL + +</code> (increase) or <code>CTRL + -</code> (decrease) the font size.  On Mac, use the Apple key instead of CTRL.</li>
+      <li>In IE you can change the text by using View -> Text Size -> (Select a different size).</li>
+      <li>Please note that Opera use a "zoom" feature instead of actually resizing text.</li>
+    </ul>
+
+    Tested on FF1.5 & FF2.0 (Windows/Mac), IE6 & IE7 (Windows), Safari 2 (Mac), Safari 3 (Windows/Mac)
+    <br /><br />
+
+    <div id="text_resize_update"></div>
+    
+    <script type="text/javascript">
+	    document.observe('dom:loaded', function()
+      {
+        // Detect for text resize every 1 second.
+        new Proto.TextResizeDetection(1000);
+        
+        // Observe the text: resized event on the document.
+        document.observe('text:resized', function(e) {
+          $('text_resize_update')
+            .update('Text size has changed! Current size: ' + e.memo.currentSize + ' - Previous size: ' + e.memo.previousSize)
+            .setStyle({
+              backgroundColor: '#0AF'
+            });
+        });
+      });
+	  </script>
+	</body>
+</html>
