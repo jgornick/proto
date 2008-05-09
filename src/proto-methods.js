@@ -461,7 +461,38 @@ Proto.ElementMethods = {
     return $(element)
       .observe('mouseover', Element.addClassName.curry(element, className))
       .observe('mouseout', Element.removeClassName.curry(element, className));
-  }
+  },
+  
+  /*
+    Function: addMethods
+    
+    Adds methods to the specified element 
+    
+    Parameters: 
+      element - (String|HTMLElement) The element to add the methods to.
+      methods - (Object) The methods object
+    
+    Returns:
+      (HTMLElement) element
+      
+    Credits:
+      John David Dalton
+  */
+  addMethods: function(element, methods)
+  {
+    element = $(element);
+    
+    var method;
+    
+    for (var name in methods) 
+    {
+      method = methods[name];
+      if (typeof element[name] != 'function')
+	      element[name] = method.curry(element);
+    }
+    
+    return element; 
+  }  
 };
 
 /*

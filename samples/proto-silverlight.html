@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+    <script type="text/javascript" src="../lib/prototype-pack.js"></script>
+    <script type="text/javascript" src="../lib/Silverlight.js"></script>
+    <script type="text/javascript" src="../src/proto-silverlight.js"></script>
+	</head>
+	<body>
+	  <div id="sl_container"></div>
+
+	  <script type="text/javascript">
+	    var sl;
+      var canvas;
+      var rect;
+      var ellipse;
+      var mediaElement;
+      
+      var slp;
+      var me;
+      
+	    document.observe('dom:loaded', function()
+      {
+        // Setup our Silverlight Plugin
+        sl = new Proto.Silverlight('sl_container', {
+          id: 'sl_player',
+          width: 650,
+          height: 370,
+          bgColor: 'white',
+          onError: function(sl, message) // On an error, show a message in a TextBlock. 
+          {
+            var med = mediaElement.getDimensions();
+
+            if (sl.getObject('message_textblock') != null) 
+              sl.getObject('message_textblock').Text = message.stripScripts().stripTags().escapeHTML();
+            else 
+            {
+              var tb = new Proto.Silverlight.Object.Builder('TextBlock')
+                .setProperty({
+                  Name: 'message_textblock',
+                  'Canvas.Top': 5,
+                  'Canvas.Left': 5,
+                  'Canvas.ZIndex': 100,
+                  Foreground: 'white',
+                  Text: message.stripScripts().stripTags().escapeHTML()
+                });
+
+              tb = sl.add(tb);
+
+              // Set the dimensions after the text block is added to the silverlight plugin. 
+              tb.setDimensions(med.width, med.height);
+            }
+          },
+          onFullScreenChange: function(sl, fullScreen)
+          {
+            if (fullScreen) 
+            {
+              sl.setSetting({
+                background: 'black'
+              });
+                           
+              rect.hide();
+              
+              mediaElement.stretchFullScreen();
+            }
+            else 
+            {
+              sl.setSetting({
+                background: 'white'
+              });
+              
+              rect.show();
+              
+              mediaElement.setDimensions(640, 360);
+              mediaElement.moveTo(5, 5);
+            }
+          }
+        });
+         
+        canvas = new Proto.Silverlight.Object.Builder('Canvas')
+          .setNamespace({
+            '': 'http://schemas.microsoft.com/client/2007',
+            x: 'http://schemas.microsoft.com/winfx/2006/xaml'
+          });
+          
+        sl.build(canvas);
+
+        canvas = sl.getObject(canvas);
+                        
+        rect = new Proto.Silverlight.Object.Builder('Rectangle')
+          .setProperty({
+            Name: 'my_rectangle',
+            Fill: '#000',
+            Stroke: '#46000000',
+            StrokeThickness: 5,
+            RadiusX: 5,
+            RadiusY: 5,
+            Width: 650,
+            Height: 370,
+            'Canvas.ZIndex': -1
+          });
+
+        rect = canvas.add(rect);
+        
+        mediaElement = new Proto.Silverlight.Object.Builder('MediaElement')
+          .setProperty({
+            Name: 'my_mediaelement',
+            Width: 640,
+            Height: 360,
+            'Canvas.Top': 5,
+            'Canvas.Left': 5,
+            Source: 'mms://local.swarmcast.net:8001/protected/content/live?streambase=http://live1.swarmcast.net/night/live.wmv',
+            AutoPlay: 'true'
+          });
+          
+        mediaElement = canvas.add(mediaElement);
+                
+        mediaElement.observe('MouseLeftButtonUp', sl.toggleFullScreen.bind(sl));
+        mediaElement.mute();
+      });
+	  </script>
+	</body>
+</html>
