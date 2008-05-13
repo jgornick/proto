@@ -148,6 +148,7 @@ Proto.Accordion = Class.create({
       useEffects: false,
       effectOptions: {},
       singleActive: false,
+      accordionHeight: 0,
       onShowSection: Prototype.emptyFunction,
       onHideSection: Prototype.emptyFunction
     };
@@ -234,6 +235,89 @@ Proto.Accordion = Class.create({
       this.sections
         .findAll(function(s) { return (s != section) })
       	.each(function(s) { this.hideSection(s, options); }.bind(this));
+  
+    // Set the content element to "semi-visible" so we can access style information.
+    var hidden = false;
+    
+    if (!section.content.visible()) 
+    {
+      hidden = true;
+    
+      var originalStyle = {
+        visibility: section.content.getStyle('visibility'),
+        position: section.content.getStyle('position'),
+        display: section.content.getStyle('display')
+      };
+      
+      section.content.setStyle({
+        visibility: 'hidden',
+        position: 'absolute',
+        display: 'block'
+      });
+    }
+
+    // We need to gain access to style information for this section, we will
+    // need to make sure it's not contained in a non-visible element.
+    // Gather all non-visible elements and set them up so we can gain style
+    // information.
+    var nonVisibleAncestors = section.content.ancestors().findAll(function(a)
+    {
+      return !a.visible();
+    });
+    
+    // Change each non-visible ancestor to a "semi-visible" element.
+    nonVisibleAncestors.each(function(a)
+    {
+      a.__visibility = a.getStyle('visibility');
+	    a.__position = a.getStyle('position');
+	    a.__display = a.getStyle('display');
+
+      a.setStyle({
+        visibility: 'hidden',
+        position: 'absolute',
+        display: 'block'
+      });
+    });
+        
+    // Get our current content dimensions.
+    var contentDimensions = {
+      width: section.content.scrollWidth,
+      height: section.content.scrollHeight
+    };
+    
+    var contentScrollHeight = contentDimensions.height;
+    
+    // Only figure out the maximum sections content height if this accordion is setup
+    // to show one section at a time and the accordion height is specified.   
+    if ((options.singleActive) && ((options.accordionHeight != 0) || ((options.accordionHeight > toggleHeight)))) 
+    {
+      // Gather all toggles height. This is used agains the accoridon height, if
+      // specified, to figure out the height of a sections content.
+      var toggleHeight = this.sections.collect(function(sec)
+      {
+        return sec.toggle.getHeight();
+      }).inject(0, function(acc, n) { return acc + n; });
+            
+      contentDimensions.height = Math.abs(options.accordionHeight - toggleHeight);
+    }
+    
+    // Return the non-visible elements back to their original style.
+    nonVisibleAncestors.each(function(a)
+    {
+      a.setStyle({
+        visibility: a.__visibility,
+        position: a.__position,
+        display: a.__display
+      });
+      
+      a.__visibility = null;
+	    a.__position = null;
+	    a.__display = null;      
+    });
+    
+    
+    // Hide the element if it was previously hidden.
+    if (hidden) section.content.setStyle(originalStyle);
     
     // Add the active class name to the toggle element.
     section.toggle.addClassName('active');
@@ -242,27 +326,51 @@ Proto.Accordion = Class.create({
     if (options.useEffects)
     {
       var effectOptions = {
-        duration: 0.5
+        duration: 0.5,
+        scaleContent: false, 
+        scaleX: false,
+        scaleFrom: 0,
+        restoreAfterFinish: false
       };
+      
+      // Check to see if we need to set a specific height.
+      if (contentDimensions.height < contentScrollHeight)
+	      effectOptions.scaleMode = {originalHeight: contentDimensions.height, originalWidth: contentDimensions.width};
+      
       Object.extend(effectOptions, options.effectOptions || { });
 
-      if (typeof effectOptions.afterFinish == 'undefined')
-        effectOptions.afterFinish = this._onShowSection.bind(this, section, options);
-      else
+      var effectOptionsClone = Object.clone(effectOptions);
+      
+      effectOptions.afterFinish = function() 
       {
-        var effectOptionsClone = Object.clone(effectOptions);
-        
-        effectOptions.afterFinish = function() {
+        if (typeof effectOptionsClone.afterFinish != 'undefined')
           effectOptionsClone.afterFinish();
-          this._onShowSection(section, options);
-        }.bind(this);
-      }
+        
+        // If our specified height of the content is greater than or equal to
+        // that of our content scroll height, then just set the height to auto
+        // for the content.
+        if (contentDimensions.height >= contentScrollHeight) 
+          section.content.setStyle({ height: 'auto' });
+        
+        // Opera does not behave properly when undoClipping is called in the blind
+        // down method.
+        if (Prototype.Browser.Opera)
+          section.content.setStyle({overflow: 'auto'});
+        
+        this._onShowSection(section, options);
+      }.bind(this);
+
       this._animating = true;
       section.content.blindDown(effectOptions);
     }
     else
     {
+      // Check to see if we need to set a specific height.
+      if (contentDimensions.height < contentScrollHeight) 
+        section.content.setStyle({ height: contentDimensions.height + 'px' });
+      
       section.content.show();
+
       this._onShowSection(section, options);
     }
   },
