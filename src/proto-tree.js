@@ -328,15 +328,13 @@ Proto.Tree.Node = Class.create({
   _build: function()
   {
     this.el = new Element('li');
-    var span = new Element('span').update(this.options.text);
+    var span = new Element('a', { href: '#'})
+      .addClassName('node')
+      .update(this.options.text);
     
     this.el.insert(span);
     
-    this.el
-      .setStyle({ cursor: 'pointer' })
-	    .observe('click', this._onClick.bind(this));
-    
-    this.el.down('span').addHoverClassName('hover');
+    this.el.observe('click', this._onClick.bind(this));
   },
   
   _onToggle: function() 
