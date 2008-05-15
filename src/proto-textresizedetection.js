@@ -86,14 +86,21 @@ Proto.TextResizeDetection = Class.create({
   
   _createSpan: function()
   {
+    // We need to insert a span with the M character in it.  The offsetHeight
+    // will give us the font size as this is the definition of the CSS font-size
+    // attribute.
     this.el = 
       new Element('span', {id: '_text_resize_detection_span'})
-      .setStyle({
-        position: 'absolute',
-        top: '-9999px',
-        left: '-9999px'
-      })
-      .update('&nbsp;');
+        .setStyle({
+          visibility: 'hidden',
+          position: 'absolute',
+          lineHeight: 0,
+          padding: 0,
+          margin: 0,
+          border: 0,
+          height: '1em'
+        })
+        .update('M');
     
     $(document.body).insert({top: this.el});
   },
