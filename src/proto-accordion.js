@@ -13,11 +13,15 @@
   About: Required Libraries
   Prototype JavaScript Framework 1.6.0.2 <http://prototypejs.org/download>
   
+  Proto.ElementMethods <Proto.ElementMethods>
+  
   About: Optional Libraries
   Script.aculo.us Effects.js 1.8.0 <http://script.aculo.us/downloads>
 */
 
 if (typeof Proto == 'undefined') var Proto = {};
+
+Element.addMethods(Proto.ElementMethods);
 
 /*
   Class: Proto.Accordion
@@ -238,46 +242,20 @@ Proto.Accordion = Class.create({
   
     // Set the content element to "semi-visible" so we can access style information.
     var hidden = false;
-    
-    if (!section.content.visible()) 
+    if (!section.content.isAccessible()) 
     {
       hidden = true;
-    
-      var originalStyle = {
-        visibility: section.content.getStyle('visibility'),
-        position: section.content.getStyle('position'),
-        display: section.content.getStyle('display')
-      };
-      
-      section.content.setStyle({
-        visibility: 'hidden',
-        position: 'absolute',
-        display: 'block'
-      });
+      section.content.setAccessibleStyles();
     }
 
     // We need to gain access to style information for this section, we will
     // need to make sure it's not contained in a non-visible element.
     // Gather all non-visible elements and set them up so we can gain style
     // information.
-    var nonVisibleAncestors = section.content.ancestors().findAll(function(a)
-    {
-      return !a.visible();
-    });
+    var nonVisibleAncestors = section.content.ancestors().findAll(function(a) { return !a.isAccessible(); });
     
-    // Change each non-visible ancestor to a "semi-visible" element.
-    nonVisibleAncestors.each(function(a)
-    {
-      a.__visibility = a.getStyle('visibility');
-	    a.__position = a.getStyle('position');
-	    a.__display = a.getStyle('display');
-
-      a.setStyle({
-        visibility: 'hidden',
-        position: 'absolute',
-        display: 'block'
-      });
-    });
+    // Change each non-visible ancestor to an accessible element.
+    nonVisibleAncestors.invoke('setAccessibleStyles');
         
     // Get our current content dimensions.
     var contentDimensions = {
@@ -302,22 +280,10 @@ Proto.Accordion = Class.create({
     }
     
     // Return the non-visible elements back to their original style.
-    nonVisibleAncestors.each(function(a)
-    {
-      a.setStyle({
-        visibility: a.__visibility,
-        position: a.__position,
-        display: a.__display
-      });
-      
-      a.__visibility = null;
-	    a.__position = null;
-	    a.__display = null;      
-    });
-    
+    nonVisibleAncestors.invoke('removeAccessibleStyles');
     
     // Hide the element if it was previously hidden.
-    if (hidden) section.content.setStyle(originalStyle);
+    if (hidden) section.content.removeAccessibleStyles();
     
     // Add the active class name to the toggle element.
     section.toggle.addClassName('active');

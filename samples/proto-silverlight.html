@@ -88,33 +88,33 @@
 
         canvas = sl.getObject(canvas);
                         
-        rect = new Proto.Silverlight.Object.Builder('Rectangle')
-          .setProperty({
-            Name: 'my_rectangle',
-            Fill: '#000',
-            Stroke: '#46000000',
-            StrokeThickness: 5,
-            RadiusX: 5,
-            RadiusY: 5,
-            Width: 650,
-            Height: 370,
-            'Canvas.ZIndex': -1
-          });
-
-        rect = canvas.add(rect);
-        
-        mediaElement = new Proto.Silverlight.Object.Builder('MediaElement')
-          .setProperty({
-            Name: 'my_mediaelement',
-            Width: 640,
-            Height: 360,
-            'Canvas.Top': 5,
-            'Canvas.Left': 5,
-            Source: 'mms://local.swarmcast.net:8001/protected/content/live?streambase=http://live1.swarmcast.net/night/live.wmv',
-            AutoPlay: 'true'
-          });
-          
-        mediaElement = canvas.add(mediaElement);
+        rect = canvas.add(
+          new Proto.Silverlight.Object.Builder('Rectangle')
+            .setProperty({
+              Name: 'my_rectangle',
+              Fill: '#000',
+              Stroke: '#46000000',
+              StrokeThickness: 5,
+              RadiusX: 5,
+              RadiusY: 5,
+              Width: 650,
+              Height: 370,
+              'Canvas.ZIndex': -1
+            })
+        );
+                 
+        mediaElement = canvas.add(
+          new Proto.Silverlight.Object.Builder('MediaElement')
+            .setProperty({
+              Name: 'my_mediaelement',
+              Width: 640,
+              Height: 360,
+              'Canvas.Top': 5,
+              'Canvas.Left': 5,
+              Source: 'mms://local.swarmcast.net:8001/protected/content/live?streambase=http://live1.swarmcast.net/night/live.wmv',
+              AutoPlay: 'true'
+            })
+        );
                 
         mediaElement.observe('MouseLeftButtonUp', sl.toggleFullScreen.bind(sl));
         mediaElement.mute();

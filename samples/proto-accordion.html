@@ -20,6 +20,7 @@
       html, body {
         width: 100%;
         height: 100%;
+        background-color: #000;
       }
       
       #container {
@@ -154,8 +155,7 @@
       var accordion = new Proto.Accordion('accordion', {
         useEffects: true, // Use script.aculo.us effects
         sectionIndex: 0, // Show the first section
-        singleActive: true, // Can only have one section active at a time.
-        accordionHeight: 250
+        singleActive: true // Can only have one section active at a time.
       });
       var accordion2 = new Proto.Accordion('accordion_2', {
         useEffects: false, // Do not use script.aculo.us effects
