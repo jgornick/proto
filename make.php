@@ -21,18 +21,18 @@
 
   $PROTO_SOURCE_FILES = array(
     'HEADER',
-    'proto-methods.js',
-    'proto-observable.js',    
-    'proto-accordion.js',
-    'proto-areaselector.js',
-    'proto-imagesobserver.js',
-    'proto-maskedinput.js',
-    'proto-progressbar.js',
-    'proto-splitter.js',
-    'proto-tabcontrol.js',
-    'proto-textresizedetection.js',
-    'proto-toolbar.js',
-    'proto-tree.js'
+    'methods.js',
+    'observable.js',    
+    'accordion.js',
+    'areaselector.js',
+    'imagesobserver.js',
+    'maskedinput.js',
+    'progressbar.js',
+    'splitter.js',
+    'tabcontrol.js',
+    'textresizedetection.js',
+    'toolbar.js',
+    'tree.js'
   );
 
   $DIST_PROTO = constant('PROTO_DIST_DIR') . '/proto.js';
