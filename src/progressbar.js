@@ -94,8 +94,7 @@ Proto.ProgressBar = Class.create({
     Returns:
       Proto.ProgressBar
   */
-  initialize: function(container, options)
-  {
+  initialize: function(container, options) {
     this.options = {
       boxImage: 'progressbar-box.png',
       barImage: 'progressbar-bar.png',
@@ -124,8 +123,7 @@ Proto.ProgressBar = Class.create({
       range from 0 to 100 or can specify a string like +10 to add 10 percent to the 
       current percentage.
   */
-  setPercent: function(percent)
-  {
+  setPercent: function(percent) {
     var initialPos = parseFloat(this.options.width * -1);
     var pxPerPercent = parseFloat(this.options.width / 100);
     
@@ -155,8 +153,7 @@ Proto.ProgressBar = Class.create({
     this.percent = this.newPercent;
   },
   
-  _build: function()
-  {
+  _build: function() {
     var initialPos = this.options.width * (-1);
 
     this.progressBarImage = new Element('img', { 

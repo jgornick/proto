@@ -18,8 +18,6 @@
 
 if (typeof Proto == 'undefined') { var Proto = {} };
 
-// Add our element methods.
-Element.addMethods(Proto.SelectionMethods.elements, Proto.SelectionMethods.methods);
 
 Element.addMethods(['INPUT', 'TEXTAREA'], {
   mask: function(element, mask, options)

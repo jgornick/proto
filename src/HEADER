@@ -1,6 +1,6 @@
 /**
- * Proto JavaScript Suite
+ * Proto JavaScript Control Suite
  * 
  * @author Joe Gornick
- * @version %PROTO_VERSION%
+ * @version <%= PROTO_VERSION %>
  */
