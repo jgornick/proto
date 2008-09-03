@@ -51,9 +51,14 @@ task :build do
   
   # Insert our header file at the beginning of the array.
   src_files.insert(0, File.join(PROTO_SRC_DIR, 'HEADER'))
-    
+
+  # Create the dist directory
+  if !File.directory?(PROTO_DIST_DIR)
+    FileUtils.mkdir 'dist'
+  end
+
   # Delete the existing proto.js
-  if File.exists?(PROTO_DIST_FILE)
+  if File.exist?(PROTO_DIST_FILE)
     File.delete(PROTO_DIST_FILE)
   end
   
@@ -76,9 +81,14 @@ end
 desc "Packs proto.js using PackR"
 task :pack => :build do
   require 'packr'
+
+  # Create the dist directory
+  if !File.directory?(PROTO_DIST_DIR)
+    FileUtils.mkdir 'dist'
+  end
   
   # Delete any existing packed file
-  if File.exists?(PROTO_DIST_FILE_PACK)
+  if File.exist?(PROTO_DIST_FILE_PACK)
     File.delete(PROTO_DIST_FILE_PACK)
   end
   
@@ -89,7 +99,7 @@ task :pack => :build do
   protopacked.puts(ERB.new(File.read(File.join(PROTO_SRC_DIR, 'HEADER'))).result(binding))
   
   # Lastly, pack the proto.js file and add it to the packed file
-  protopacked.puts(Packr.new.pack(File.read(PROTO_DIST_FILE), :base62 => true, :shrink_vars => true))
+  protopacked.puts(Packr.new.pack(File.read(PROTO_DIST_FILE), :base62 => true, :shrink_vars => false))
   
   protopacked.close
 end

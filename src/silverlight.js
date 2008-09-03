@@ -410,8 +410,6 @@ Proto.Silverlight.Object = Class.create({
   }
 });
 
-
-
 Proto.Silverlight.Object.Builder = Class.create({
   initialize: function(xamlTag)
   {
@@ -474,7 +472,7 @@ Proto.Silverlight.Object.Builder = Class.create({
     this.namespaces.each(function(ns)
     {
       var xmlns = 'xmlns';
-      xmlns += (ns.key!= '') ? ':' + ns.key : ''
+      xmlns += (ns.key!= '') ? ':' + ns.key : '';
       xmlns += '="' + ns.value + '"';
       
       xaml.push(xmlns);
